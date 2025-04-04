@@ -1,7 +1,8 @@
 import React from 'react';
 import TodoItem from './TodoItem';
 
-const TodoList = ({ todos, toggleTodo, deleteTodo }) => {
+const TodoList = ({ todos, toggleTodo, deleteTodo, updateTodo }) => {
+	
 	if (todos.length === 0) {
 		return (
 			<div className="py-10 text-center text-gray-500">
@@ -22,6 +23,7 @@ const TodoList = ({ todos, toggleTodo, deleteTodo }) => {
 					todo={todo}
 					toggleTodo={toggleTodo}
 					deleteTodo={deleteTodo}
+					updateTodo={updateTodo}
 				/>
 			))}
 		</div>

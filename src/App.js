@@ -60,6 +60,14 @@ function App() {
 		setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
 	};
 
+	const updateTodo = (id, name) => {
+		setTodos(prevTodos =>
+			prevTodos.map(todo =>
+				todo.id === id ? {...todo, name} : todo
+			)
+		);
+	}
+
 	const clearCompleted = () => {
 		setTodos((prevTodos) => prevTodos.filter((todo) => !todo.completed));
 	};
@@ -97,6 +105,7 @@ function App() {
 							todos={todos} 
 							toggleTodo={toggleTodo} 
 							deleteTodo={deleteTodo} 
+							updateTodo={updateTodo}
 						/>
 					)}
 				</main>

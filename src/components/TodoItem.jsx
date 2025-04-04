@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '../lib/utils';
 import { todoAppearClass, todoCompleteClass, CompletedCheck } from './TodoAnimations';
 
-const TodoItem = ({ todo, toggleTodo, deleteTodo }) => {
+const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 	const [isCompleting, setIsCompleting] = useState(false);
-	
+
+	// TODO名更新用のstate
+	const [isEditing, setIsEditing] = useState(false);
+	const inputRef = useRef(null);
+
+	useEffect(() => {
+		if (isEditing && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [isEditing]);
+
 	const handleTodoClick = () => {
 		if (!todo.completed) {
 			setIsCompleting(true);
@@ -21,6 +31,25 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo }) => {
 		e.stopPropagation();
 		deleteTodo(todo.id);
 	};
+
+	const handleInputChange = (e) => {
+		const newName = e.target.value;
+		updateTodo(todo.id, newName);
+	}
+
+	const handleNameClick = () => {
+		setIsEditing(true);
+	}
+
+	const handleInputBlur = () => {
+		setIsEditing(false);
+	}
+
+	const handleInputKeyDown = (e) => {
+		if (e.key === 'Enter') {
+			setIsEditing(false);
+		}
+	}
 
 	return (
 		<div 
@@ -48,15 +77,32 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo }) => {
 						</div>
 					)}
 				</div>
-				
-				<span 
-					className={cn(
-						"text-lg transition-all duration-200",
-						todo.completed && "line-through text-gray-500"
-					)}
-				>
-					{todo.name}
-				</span>
+
+
+				{isEditing && !todo.completed ? (
+					<input 
+						ref={inputRef}
+						type="text"
+						value={todo.name}
+						onChange={handleInputChange}
+						onBlur={handleInputBlur}
+						onKeyDown={handleInputKeyDown}
+						className={cn(
+							"input flext-grow p-0 text-lg transition-all duration-200",
+							todo.completed && "line-through text-gray-500"
+						)}
+					/>
+				) : (
+					<span
+						onClick={handleNameClick}
+						className={cn(
+							"text-lg transition-all duration-200",
+							todo.completed && "line-through text-gray-500"
+						)}
+					>
+						{todo.name}
+					</span>
+				)}
 			</div>
 
 			<button 
