@@ -1,13 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '../lib/utils';
 import { todoAppearClass, todoCompleteClass, CompletedCheck } from './TodoAnimations';
+import { FiEdit2 } from 'react-icons/fi';
 
 const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 	const [isCompleting, setIsCompleting] = useState(false);
-
-	// TODO名更新用のstate
+	// タスク名編集フラグの状態
 	const [isEditing, setIsEditing] = useState(false);
+	// 入力幅の状態
+	const [inputWidth, setInputWidth] = useState("auto");
 	const inputRef = useRef(null);
+	const hiddenSpanRef = useRef(null);
+	const containerRef = useRef(null);
+
+	// 編集モードに入る前に幅を計算してから状態を更新
+	const startEditing = () => {
+		if (hiddenSpanRef.current && containerRef.current) {
+			const containerWidth = containerRef.current.clientWidth;
+			const textWidth = hiddenSpanRef.current.offsetWidth + 8;
+			const availableSpace = containerWidth - 120;
+			const optimalWidth = Math.min(textWidth, availableSpace);
+			
+			// 先に幅を設定してから編集モードに切り替え
+			setInputWidth(`${optimalWidth}px`);
+			setIsEditing(true);
+		}
+	};
 
 	useEffect(() => {
 		if (isEditing && inputRef.current) {
@@ -35,10 +53,19 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 	const handleInputChange = (e) => {
 		const newName = e.target.value;
 		updateTodo(todo.id, newName);
+
+		// 入力内容が変わったら幅も再計算
+		if (hiddenSpanRef.current && containerRef.current) {
+			const containerWidth = containerRef.current.clientWidth;
+			const textWidth = hiddenSpanRef.current.offsetWidth + 8;
+			const availableSpace = containerWidth - 120;
+			const optimalWidth = Math.min(textWidth, availableSpace);
+			setInputWidth(`${optimalWidth}px`);
+		}
 	}
 
 	const handleNameClick = () => {
-		setIsEditing(true);
+		startEditing();
 	}
 
 	const handleInputBlur = () => {
@@ -53,6 +80,7 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 
 	return (
 		<div 
+			ref={containerRef}
 			className={cn(
 				"todo-card mb-2 flex items-center justify-between group",
 				todoAppearClass,
@@ -87,8 +115,10 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 						onChange={handleInputChange}
 						onBlur={handleInputBlur}
 						onKeyDown={handleInputKeyDown}
+						style={{ width: inputWidth }} // スタイルで幅を直接指定
 						className={cn(
-							"input flext-grow p-0 text-lg transition-all duration-200",
+							"input p-0 text-lg transition-all duration-200",
+							"overflow-hidden text-ellipsis",
 							todo.completed && "line-through text-gray-500"
 						)}
 					/>
@@ -96,13 +126,22 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 					<span
 						onClick={handleNameClick}
 						className={cn(
-							"text-lg transition-all duration-200",
+							"relative group cursor-pointer text-lg transition-all duration-200 flex items-center gap-1",
 							todo.completed && "line-through text-gray-500"
 						)}
 					>
 						{todo.name}
+						{!todo.completed && <FiEdit2 className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />}
 					</span>
 				)}
+
+				{/* テキスト幅を測定するための非表示のspan */}
+				<span
+					ref={hiddenSpanRef}
+					className="absolute invisible whitespace-pre text-lg"
+				>
+					{todo.name}
+				</span>
 			</div>
 
 			<button 
