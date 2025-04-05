@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 import TodoHeader from "./components/TodoHeader";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import TodoStats from "./components/TodoStats";
 import { LoadingSpinner } from "./components/TodoAnimations";
+import { useTodos } from "./hooks/useTodos";
 
 const LOCAL_STORAGE_KEY = "todoApp.todos";
 
 function App() {
-	const [todos, setTodos] = useState(() => {
-		const storedTodos = localStorage.getItem(LOCAL_STORAGE_KEY);
-		return storedTodos ? JSON.parse(storedTodos) : [];
-	});
-	const [isLoading, setIsLoading] = useState(true);
+	const {
+		todos,
+		isLoading,
+		addTodo,
+		toggleTodo,
+		deleteTodo,
+		updateTodo,
+		clearCompleted
+	} = useTodos();
 	const [darkMode, setDarkMode] = useState(() => {
 		const savedMode = localStorage.getItem("darkMode");
 		return savedMode ? JSON.parse(savedMode) : window.matchMedia('(prefers-color-scheme: dark)').matches;
 	});
-
-	useEffect(() => {
-		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
-	}, [todos]);
 
 	useEffect(() => {
 		localStorage.setItem("darkMode", JSON.stringify(darkMode));
@@ -31,46 +31,6 @@ function App() {
 			document.documentElement.classList.remove('dark');
 		}
 	}, [darkMode]);
-
-	useEffect(() => {
-		// 読み込みシミュレーション
-		const timer = setTimeout(() => {
-			setIsLoading(false);
-		}, 800);
-		
-		return () => clearTimeout(timer);
-	}, []);
-
-	const addTodo = (name) => {
-		setTodos((prevTodos) => [
-			...prevTodos,
-			{ id: uuidv4(), name, completed: false },
-		]);
-	};
-
-	const toggleTodo = (id) => {
-		setTodos((prevTodos) =>
-			prevTodos.map((todo) =>
-				todo.id === id ? { ...todo, completed: !todo.completed } : todo
-			)
-		);
-	};
-
-	const deleteTodo = (id) => {
-		setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-	};
-
-	const updateTodo = (id, name) => {
-		setTodos(prevTodos =>
-			prevTodos.map(todo =>
-				todo.id === id ? {...todo, name} : todo
-			)
-		);
-	}
-
-	const clearCompleted = () => {
-		setTodos((prevTodos) => prevTodos.filter((todo) => !todo.completed));
-	};
 
 	return (
 		<div className={`min-h-screen bg-background p-4 sm:p-6 md:p-8 transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
