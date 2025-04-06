@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
 import TodoHeader from "./components/TodoHeader";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 import TodoStats from "./components/TodoStats";
 import { LoadingSpinner } from "./components/TodoAnimations";
 import { useTodos } from "./hooks/useTodos";
-
-const LOCAL_STORAGE_KEY = "todoApp.todos";
 
 function App() {
 	const {
@@ -16,21 +13,10 @@ function App() {
 		toggleTodo,
 		deleteTodo,
 		updateTodo,
-		clearCompleted
+		clearCompleted,
+		darkMode,
+		toggleDarkMode
 	} = useTodos();
-	const [darkMode, setDarkMode] = useState(() => {
-		const savedMode = localStorage.getItem("darkMode");
-		return savedMode ? JSON.parse(savedMode) : window.matchMedia('(prefers-color-scheme: dark)').matches;
-	});
-
-	useEffect(() => {
-		localStorage.setItem("darkMode", JSON.stringify(darkMode));
-		if (darkMode) {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
-	}, [darkMode]);
 
 	return (
 		<div className={`min-h-screen bg-background p-4 sm:p-6 md:p-8 transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
@@ -39,7 +25,7 @@ function App() {
 					<TodoHeader />
 					
 					<button 
-						onClick={() => setDarkMode(!darkMode)}
+						onClick={toggleDarkMode}
 						className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
 						aria-label={darkMode ? "ライトモードに切り替え" : "ダークモードに切り替え"}
 					>

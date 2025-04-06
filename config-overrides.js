@@ -6,7 +6,8 @@ module.exports = function override(config) {
 		fs: false,
 		path: require.resolve("path-browserify"),
 		crypto: require.resolve("crypto-browserify"),
-		stream: require.resolve("stream-browserify"), // ← 追加
+		stream: require.resolve("stream-browserify"),
+		vm: require.resolve("vm-browserify"),
 	};
 
 	config.plugins = [
