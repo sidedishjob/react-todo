@@ -2,9 +2,9 @@ import React from 'react';
 
 // スタイル付きのローディングアニメーションコンポーネント
 export const LoadingSpinner = () => (
-  <div className="flex justify-center items-center py-10">
-    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
-  </div>
+	<div className="flex justify-center items-center py-10">
+		<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+	</div>
 );
 
 // 完了時のチェックマークアニメーション

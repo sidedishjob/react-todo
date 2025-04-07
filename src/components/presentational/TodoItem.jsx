@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { cn } from '../lib/utils';
+import { cn } from '../../lib/utils';
 import { todoAppearClass, todoCompleteClass, CompletedCheck } from './TodoAnimations';
 import { FiEdit2 } from 'react-icons/fi';
 

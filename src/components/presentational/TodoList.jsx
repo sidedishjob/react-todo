@@ -19,6 +19,7 @@ const TodoList = ({ todos, updateTitle, toggleTodo, remove }) => {
 		<div className="space-y-2">
 			{todos.map(todo => (
 				<TodoItem
+					key={todo.id}
 					todo={todo}
 					updateTitle={updateTitle}
 					toggleTodo={toggleTodo}
