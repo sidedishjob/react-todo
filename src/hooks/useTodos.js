@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useLoading from './useLoading';
 import {
 	getAllTodos,
 	addTodo,
@@ -10,18 +11,18 @@ import {
 // Todo用のカスタムフック（状態管理 + 永続化）
 const useTodos = () => {
 	const [todos, setTodos] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const { isLoading, startLoading, stopLoading } = useLoading(true);
 
 	// 初期表示時にIndexedDBからデータを取得
 	useEffect(() => {
-		const fetchTodos = async () => {
+		const init = async () => {
+			startLoading();
 			const data = await getAllTodos();
 			setTodos(data);
-		};
-		fetchTodos();
-
-		setIsLoading(false);
-	}, []);
+			stopLoading();
+		}
+		init();
+	}, [startLoading, stopLoading]);
 
 	// Todoを追加する
 	const add = async (title) => {
