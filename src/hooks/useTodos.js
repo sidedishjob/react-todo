@@ -5,15 +5,12 @@ import {
 	updateTodoTitleInDB,
 	toggleTodoInDB,
 	deleteTodo,
-	getSetting,
-	saveSetting,
 } from '../db/indexeddb';
 
 // Todo用のカスタムフック（状態管理 + 永続化）
 const useTodos = () => {
 	const [todos, setTodos] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [isDarkMode, setIsDarkMode] = useState(false);
 
 	// 初期表示時にIndexedDBからデータを取得
 	useEffect(() => {
@@ -22,14 +19,6 @@ const useTodos = () => {
 			setTodos(data);
 		};
 		fetchTodos();
-
-		// darkModeの取得
-		const fetchDarkMode = async () => {
-			const mode = await getSetting('darkMode');
-			const isDark = mode === 'dark';
-			setIsDarkMode(isDark);
-		}
-		fetchDarkMode();
 
 		setIsLoading(false);
 	}, []);
@@ -68,22 +57,13 @@ const useTodos = () => {
 		setTodos((prev) => prev.filter((t) => t.id !== id));
 	};
 
-	// darkModeを切り替える
-	const toggleDarkMode = async () => {
-		const target = isDarkMode ? 'light' : 'dark';
-		await saveSetting('darkMode', target);
-		setIsDarkMode(target === 'dark');
-	}
-
 	return {
 		todos,
 		isLoading,
-		isDarkMode,
 		add,
 		updateTitle: handleUpdateTitle,
 		toggleTodo: handleToggleTodo,
 		remove,
-		toggleDarkMode,
 	};
 
 };

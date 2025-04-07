@@ -1,5 +1,6 @@
 import React from 'react';
 import useTodos from '../../hooks/useTodos';
+import useDarkMode from '../../hooks/useDarkMode';
 import TodoAppUI from '../presentational/TodoAppUI';
 
 // 状態を管理し、UI層に渡すだけのコンテナ
@@ -7,13 +8,13 @@ const TodoContainer = () => {
 	const {
 		todos,
 		isLoading,
-		isDarkMode,
 		add,
 		updateTitle,
 		toggleTodo,
 		remove,
-		toggleDarkMode,
 	} = useTodos();
+
+	const { isDarkMode, toggleDarkMode } = useDarkMode();
 
 	return (
 		<TodoAppUI
