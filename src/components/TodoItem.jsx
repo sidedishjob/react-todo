@@ -3,15 +3,23 @@ import { cn } from '../lib/utils';
 import { todoAppearClass, todoCompleteClass, CompletedCheck } from './TodoAnimations';
 import { FiEdit2 } from 'react-icons/fi';
 
-const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
+const TodoItem = ({ todo, updateTitle, toggleTodo, remove }) => {
 	const [isCompleting, setIsCompleting] = useState(false);
 	// タスク名編集フラグの状態
 	const [isEditing, setIsEditing] = useState(false);
 	// 入力幅の状態
 	const [inputWidth, setInputWidth] = useState("auto");
+	// 編集用の状態
+	const [editTitle, setEditTitle] = useState(todo.title);
 	const inputRef = useRef(null);
 	const hiddenSpanRef = useRef(null);
 	const containerRef = useRef(null);
+
+	useEffect(() => {
+		if (isEditing && inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, [isEditing]);
 
 	// 編集モードに入る前に幅を計算してから状態を更新
 	const startEditing = () => {
@@ -25,13 +33,22 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 			setInputWidth(`${optimalWidth}px`);
 			setIsEditing(true);
 		}
+
+		setEditTitle(todo.title);
+		recalculateInputWidth();
+		setIsEditing(true);
 	};
 
-	useEffect(() => {
-		if (isEditing && inputRef.current) {
-			inputRef.current.focus();
+	// 入力中のタイトルに応じて幅を再計算する
+	const recalculateInputWidth = () => {
+		if (hiddenSpanRef.current && containerRef.current) {
+			const containerWidth = containerRef.current.clientWidth;
+			const textWidth = hiddenSpanRef.current.offsetWidth + 8;	// テキスト幅+余白
+			const availableSpace = containerWidth - 120;	// チェックボックス&削除ボタン領域
+			const optimalWidth = Math.min(textWidth, availableSpace);
+			setInputWidth(`${optimalWidth}px`);
 		}
-	}, [isEditing]);
+	};
 
 	const handleTodoClick = () => {
 		if (!todo.completed) {
@@ -47,12 +64,15 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 
 	const handleDeleteClick = (e) => {
 		e.stopPropagation();
-		deleteTodo(todo.id);
+		remove(todo.id);
 	};
 
 	const handleInputChange = (e) => {
-		const newName = e.target.value;
-		updateTodo(todo.id, newName);
+		const newTitle = e.target.value;
+		// 入力中は state に保持のみ（DB書き込みしない）
+		setEditTitle(newTitle);
+		// 入力に応じて幅調整
+		recalculateInputWidth();
 
 		// 入力内容が変わったら幅も再計算
 		if (hiddenSpanRef.current && containerRef.current) {
@@ -64,18 +84,25 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 		}
 	}
 
-	const handleNameClick = () => {
+	const handleTitleClick = () => {
 		startEditing();
 	}
 
 	const handleInputBlur = () => {
-		setIsEditing(false);
+		finishEditing();
 	}
 
 	const handleInputKeyDown = (e) => {
 		if (e.key === 'Enter') {
-			setIsEditing(false);
+			finishEditing();
 		}
+	}
+
+	const finishEditing = () => {
+		if (editTitle !== todo.title) {
+			updateTitle(todo.id, editTitle);
+		}
+		setIsEditing(false);
 	}
 
 	return (
@@ -106,16 +133,16 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 					)}
 				</div>
 
-
 				{isEditing && !todo.completed ? (
 					<input 
 						ref={inputRef}
 						type="text"
-						value={todo.name}
+						value={editTitle}
 						onChange={handleInputChange}
 						onBlur={handleInputBlur}
 						onKeyDown={handleInputKeyDown}
-						style={{ width: inputWidth }} // スタイルで幅を直接指定
+						//style={{ width: inputWidth }} // スタイルで幅を直接指定
+						style={{ width: inputWidth, maxWidth: "100%" }}
 						className={cn(
 							"input p-0 text-lg transition-all duration-200",
 							"overflow-hidden text-ellipsis",
@@ -124,13 +151,13 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 					/>
 				) : (
 					<span
-						onClick={handleNameClick}
+						onClick={handleTitleClick}
 						className={cn(
 							"relative group cursor-pointer text-lg transition-all duration-200 flex items-center gap-1",
 							todo.completed && "line-through text-gray-500"
 						)}
 					>
-						{todo.name}
+						{todo.title}
 						{!todo.completed && <FiEdit2 className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />}
 					</span>
 				)}
@@ -140,7 +167,7 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo, updateTodo }) => {
 					ref={hiddenSpanRef}
 					className="absolute invisible whitespace-pre text-lg"
 				>
-					{todo.name}
+					{editTitle}
 				</span>
 			</div>
 

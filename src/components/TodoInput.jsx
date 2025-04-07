@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { cn } from '../lib/utils';
 
-const TodoInput = ({ addTodo, darkMode }) => {
+const TodoInput = ({ add, isDarkMode }) => {
 	const [inputValue, setInputValue] = useState('');
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (inputValue.trim()) {
-			addTodo(inputValue);
+			add(inputValue);
 			setInputValue('');
 		}
 	};
@@ -21,7 +21,7 @@ const TodoInput = ({ addTodo, darkMode }) => {
 				placeholder="新しいタスクを入力..."
 				className={cn(
 					"input flex-grow mr-2",
-					darkMode ? "placeholder:text-gray-500" : "placeholder:text-gray-400"
+					isDarkMode ? "placeholder:text-gray-500" : "placeholder:text-gray-400"
 				)}
 			/>
 			<button
