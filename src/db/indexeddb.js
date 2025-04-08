@@ -30,6 +30,12 @@ export const getAllTodos = async () => {
 	return store.getAll();
 };
 
+// Todoをidで取得する
+export const getTodoById = async (id) => {
+	const db = await initDB();
+	return db.get('todos', id);
+}
+
 // Todoを追加する
 export const addTodo = async (todo) => {
 	const db = await initDB();

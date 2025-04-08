@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import useLoading from './useLoading';
 import {
 	getAllTodos,
+	getTodoById,
 	addTodo,
 	updateTodoTitleInDB,
 	toggleTodoInDB,
@@ -23,6 +24,11 @@ const useTodos = () => {
 		}
 		init();
 	}, [startLoading, stopLoading]);
+
+	// IndexedDBからidを指定して取得
+	const getById = useCallback(async (id) => {
+		return await getTodoById(id);
+	}, []);
 
 	// Todoを追加する
 	const add = async (title) => {
@@ -61,6 +67,7 @@ const useTodos = () => {
 	return {
 		todos,
 		isLoading,
+		getById,
 		add,
 		updateTitle: handleUpdateTitle,
 		toggleTodo: handleToggleTodo,
