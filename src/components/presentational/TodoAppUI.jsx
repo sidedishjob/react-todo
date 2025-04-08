@@ -16,7 +16,7 @@ const TodoAppUI = ({
 	toggleDarkMode,
 }) => {
 	return (
-		<div className={`min-h-screen bg-background p-4 sm:p-6 md:p-8 transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
+		<div className={`bg-background p-4 sm:p-6 md:p-8 transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
 			<div className="mx-auto max-w-3xl bg-card dark:bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6 transition-colors duration-300">
 				<div className="flex justify-between items-center mb-4">
 					<TodoHeader />
