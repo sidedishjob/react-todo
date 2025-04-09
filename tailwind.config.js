@@ -8,6 +8,7 @@ module.exports = {
 				primary: {
 					DEFAULT: "#3b82f6",
 					hover: "#2563eb",
+					dark: '#60a5fa',
 				},
 				secondary: {
 					DEFAULT: "#10b981",
@@ -17,8 +18,14 @@ module.exports = {
 					DEFAULT: "#ef4444",
 					hover: "#dc2626",
 				},
-				background: "#f3f4f6",
-				card: "#ffffff",
+				background: {
+					DEFAULT: '#ffffff',
+					dark: '#1f2937',
+				},
+				card: {
+					DEFAULT: '#f9fafb',
+					dark: '#374151',
+				},
 			},
 			borderRadius: {
 				md: "0.375rem",

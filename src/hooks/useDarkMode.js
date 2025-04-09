@@ -17,6 +17,16 @@ const useDarkMode = () => {
 		fetchDarkMode();
 	}, []);
 
+	// 状態が変更されたらDOMに反映
+	useEffect(() => {
+		const root = document.documentElement;
+		if (isDarkMode) {
+			root.classList.add('dark');
+		} else {
+			root.classList.remove('dark');
+		}
+	}, [isDarkMode]);
+
 	// ダークモードの切り替え
 	const toggleDarkMode = async () => {
 		const newMode = isDarkMode ? 'light' : 'dark';

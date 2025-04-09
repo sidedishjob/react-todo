@@ -3,41 +3,43 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-background text-gray-800 font-sans;
-  }
-
-  .dark body {
-    @apply bg-gray-900 text-gray-200;
-  }
+	html {
+		@apply transition-colors duration-300;
+	}
+	body {
+		@apply transition-colors duration-300;
+	}
+	.dark body {
+		@apply bg-background-dark text-gray-200;
+	}
 }
 
 @layer components {
-  .btn {
-    @apply px-4 py-2 rounded-md font-medium transition-all duration-200;
-  }
-  .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-hover;
-  }
-  .btn-secondary {
-    @apply bg-secondary text-white hover:bg-secondary-hover;
-  }
-  .btn-danger {
-    @apply bg-danger text-white hover:bg-danger-hover;
-  }
-  .input {
-    @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50;
-  }
-  .dark .input {
-    @apply bg-gray-700 border-gray-600 text-white;
-  }
-  .todo-card {
-    @apply bg-card rounded-md p-4 shadow-card hover:shadow-hover transition-shadow duration-200;
-  }
-  .dark .todo-card {
-    @apply bg-gray-800 text-gray-200;
-  }
-  .dark .todo-card.bg-gray-100 {
-    @apply bg-gray-700;
-  }
+	.btn {
+		@apply px-4 py-2 rounded-md font-medium transition-all duration-200;
+	}
+	.btn-primary {
+		@apply bg-primary text-white hover:bg-primary-hover;
+	}
+	.btn-secondary {
+		@apply bg-secondary text-white hover:bg-secondary-hover;
+	}
+	.btn-danger {
+		@apply bg-danger text-white hover:bg-danger-hover;
+	}
+	.input {
+		@apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50;
+	}
+	.dark .input {
+		@apply bg-gray-700 border-gray-600 text-white;
+	}
+	.todo-card {
+		@apply bg-card rounded-md p-4 shadow-card hover:shadow-hover transition-shadow duration-200;
+	}
+	.dark .todo-card {
+		@apply bg-gray-800 text-gray-200;
+	}
+	.dark .todo-card.bg-gray-100 {
+		@apply bg-gray-700;
+	}
 }

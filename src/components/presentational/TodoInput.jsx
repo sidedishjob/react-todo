@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { cn } from '../../lib/utils';
 
-const TodoInput = ({ add, isDarkMode }) => {
+const TodoInput = ({ add }) => {
 	const [inputValue, setInputValue] = useState('');
 
 	const handleSubmit = (e) => {
@@ -19,10 +18,7 @@ const TodoInput = ({ add, isDarkMode }) => {
 				value={inputValue}
 				onChange={(e) => setInputValue(e.target.value)}
 				placeholder="新しいタスクを入力..."
-				className={cn(
-					"input flex-grow mr-2",
-					isDarkMode ? "placeholder:text-gray-500" : "placeholder:text-gray-400"
-				)}
+				className={"input flex-grow mr-2 transition-colors duration-300"}
 			/>
 			<button
 				type="submit"
