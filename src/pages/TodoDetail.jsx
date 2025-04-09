@@ -47,7 +47,7 @@ const TodoDetail = () => {
 						<p className="text-lg">
 							<span className="font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-300">ステータス：</span>
 							<span
-								className={`inline-block px-2 py-0.5 rounded-full text-sm font-medium  ${
+								className={`inline-block px-2 py-0.5 rounded-full text-sm font-medium ${
 									todo.completed ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
 								}`}
 							>
