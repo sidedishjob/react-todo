@@ -6,12 +6,12 @@ import { getSetting, saveSetting } from '../db/indexeddb';
  * ダークモード設定を管理するカスタムフック
  */
 const useDarkMode = () => {
-	const [isDarkMode, setIsDarkMode] = useState(false);
+	const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
 	// 初回レンダリング時に設定を取得
 	useEffect(() => {
-		const fetchDarkMode = async () => {
-			const mode = await getSetting('darkMode');
+		const fetchDarkMode = async (): Promise<void> => {
+			const mode = await getSetting('darkMode') as 'dark' | 'light' | null;
 			setIsDarkMode(mode === 'dark');
 		};
 		fetchDarkMode();
@@ -28,7 +28,7 @@ const useDarkMode = () => {
 	}, [isDarkMode]);
 
 	// ダークモードの切り替え
-	const toggleDarkMode = async () => {
+	const toggleDarkMode = async (): Promise<void> => {
 		const newMode = isDarkMode ? 'light' : 'dark';
 		await saveSetting('darkMode', newMode);
 		setIsDarkMode(newMode === 'dark');
