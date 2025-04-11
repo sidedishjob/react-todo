@@ -4,8 +4,8 @@ import './index.css';
 import App from './App';
 
 // favicon を動的に切り替える関数
-function updateFaviconForTheme(theme) {
-	const favicon = document.getElementById("favicon");
+function updateFaviconForTheme(theme: string) {
+	const favicon = document.getElementById("favicon") as HTMLLinkElement | null;
 	if (!favicon) return;
 
 	if (theme === "dark") {
@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error("Root element not found");
+
+const root = ReactDOM.createRoot(rootElement);
 root.render(
 	<React.StrictMode>
 		<App />
