@@ -3,14 +3,15 @@ import { useParams } from 'react-router-dom';
 import AppLayout from '../layouts/AppLayout';
 import useTodos from '../hooks/useTodos';
 import { LoadingSpinner } from '../components/presentational/TodoAnimations';
+import { Todo } from '../types/todo';
 
 const TodoDetail = () => {
-	const { id } = useParams();
+	const { id } = useParams<{ id: string }>();
 	const { getById } = useTodos();
 
-	const [todo, setTodo] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const [notFound, setNotFound] = useState(false);
+	const [todo, setTodo] = useState<Todo | undefined>();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [notFound, setNotFound] = useState<boolean>(false);
 
 	useEffect(() => {
 		const fetchTodo = async () => {
@@ -41,26 +42,26 @@ const TodoDetail = () => {
 					<div className="space-y-2">
 						<p className="text-lg">
 							<span className="font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-300">タイトル：</span>
-							{todo.title}
+							{todo!.title}
 						</p>
 
 						<p className="text-lg">
 							<span className="font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-300">ステータス：</span>
 							<span
 								className={`inline-block px-2 py-0.5 rounded-full text-sm font-medium ${
-									todo.completed ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
+									todo!.completed ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
 								}`}
 							>
-								{todo.completed ? '完了' : '未完了'}
+								{todo!.completed ? '完了' : '未完了'}
 							</span>
 						</p>
 
 						<p className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
-							作成日時：{new Date(todo.createdAt).toLocaleString()}
+							作成日時：{new Date(todo!.createdAt).toLocaleString()}
 						</p>
-						{todo.updatedAt && (
+						{todo!.updatedAt && (
 							<p className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
-								更新日時：{new Date(todo.updatedAt).toLocaleString()}
+								更新日時：{new Date(todo!.updatedAt).toLocaleString()}
 							</p>
 						)}
 					</div>
