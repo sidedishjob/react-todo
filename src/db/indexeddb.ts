@@ -1,22 +1,11 @@
 import { openDB, IDBPDatabase } from 'idb';
-
-// Todo型を定義
-interface Todo {
-	// id はDBで autoIncrement: true なので、追加時は undefined でもOKなように ? にしておきます。
-	id?: number;
-	title: string;
-	completed: boolean;
-	createdAt: string;
-	updatedAt: string;
-}
+import { Todo, NewTodo } from '../types/todo';
+import { Setting } from '../types/setting';
 
 // Todoと設定を含むDB型を定義
 interface DBStructure {
 	todos: Todo;
-	settings: {
-		key: string;
-		value: string;
-	};
+	settings: Setting;
 }
 
 // indexedDB を初期化（DBがなければ作成）
@@ -56,7 +45,7 @@ export const getTodoById = async (id: number): Promise<Todo | undefined> => {
 }
 
 // Todoを追加する
-export const addTodo = async (todo: Todo): Promise<number> => {
+export const addTodo = async (todo: NewTodo): Promise<number> => {
 	const db = await initDB();
 	return db.add('todos', todo) as Promise<number>;
 };

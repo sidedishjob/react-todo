@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import useLoading from './useLoading';
+import { Todo } from '../types/todo';
 import {
 	getAllTodos,
 	getTodoById,
@@ -11,7 +12,7 @@ import {
 
 // Todo用のカスタムフック（状態管理 + 永続化）
 const useTodos = () => {
-	const [todos, setTodos] = useState([]);
+	const [todos, setTodos] = useState<Todo[]>([]);
 	const { isLoading, startLoading, stopLoading } = useLoading(true);
 
 	// 初期表示時にIndexedDBからデータを取得
@@ -26,12 +27,12 @@ const useTodos = () => {
 	}, [startLoading, stopLoading]);
 
 	// IndexedDBからidを指定して取得
-	const getById = useCallback(async (id) => {
+	const getById = useCallback(async (id: number): Promise<Todo | undefined> => {
 		return await getTodoById(id);
 	}, []);
 
 	// Todoを追加する
-	const add = async (title) => {
+	const add = async (title: string): Promise<void> => {
 		const newTodo = {
 			title,
 			completed: false,
@@ -43,7 +44,7 @@ const useTodos = () => {
 	};
 
 	// タイトルを更新する（DB & State)
-	const handleUpdateTitle = async (id, newTitle) => {
+	const handleUpdateTitle = async (id: number, newTitle: string): Promise<void> => {
 		const updated = await updateTodoTitleInDB(id, newTitle);
 		if (!updated) return;
 
@@ -51,7 +52,7 @@ const useTodos = () => {
 	}
 
 	// 完了状態を切り替える（DB & State）
-	const handleToggleTodo = async (id) => {
+	const handleToggleTodo = async (id: number): Promise<void> => {
 		const updated = await toggleTodoInDB(id);
 		if (!updated) return;
 
@@ -59,7 +60,7 @@ const useTodos = () => {
 	};
 
 	// Todoを削除する
-	const remove = async (id) => {
+	const remove = async (id: number): Promise<void> => {
 		await deleteTodo(id);
 		setTodos((prev) => prev.filter((t) => t.id !== id));
 	};
