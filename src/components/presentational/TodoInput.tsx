@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 
-const TodoInput = ({ add }) => {
-	const [inputValue, setInputValue] = useState('');
+interface TodoInputProps {
+	add: (title: string) => Promise<void>;
+}
 
-	const handleSubmit = (e) => {
+const TodoInput = ({ add }: TodoInputProps) => {
+	const [inputValue, setInputValue] = useState<string>('');
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (inputValue.trim()) {
 			add(inputValue);
@@ -16,9 +20,9 @@ const TodoInput = ({ add }) => {
 			<input
 				type="text"
 				value={inputValue}
-				onChange={(e) => setInputValue(e.target.value)}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
 				placeholder="新しいタスクを入力..."
-				className={"input flex-grow mr-2 transition-colors duration-300"}
+				className="input flex-grow mr-2 transition-colors duration-300"
 			/>
 			<button
 				type="submit"

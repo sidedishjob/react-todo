@@ -1,8 +1,13 @@
 import React from 'react';
+import { Todo } from '../../types/todo';
 
-const TodoStats = ({ todos }) => {
+interface TodoStatsProps {
+	todos: Todo[];
+}
+
+const TodoStats = ({ todos }: TodoStatsProps) => {
 	const total = todos.length;
-	const completed = todos.filter(todo => todo.completed).length;
+	const completed = todos.filter((todo) => todo.completed).length;
 	const remaining = total - completed;
 
 	return (

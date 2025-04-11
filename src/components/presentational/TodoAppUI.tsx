@@ -4,15 +4,18 @@ import TodoInput from './TodoInput';
 import TodoList from './TodoList';
 import TodoStats from './TodoStats';
 import { LoadingSpinner } from './TodoAnimations';
+import { Todo } from '../../types/todo';
 
-const TodoAppUI = ({
-	todos,
-	isLoading,
-	add,
-	updateTitle,
-	toggleTodo,
-	remove,
-}) => {
+interface TodoAppUIProps {
+	todos: Todo[];
+	isLoading: boolean;
+	add: (title: string) => Promise<void>;
+	updateTitle: (id: number, newTitle: string) => Promise<void>;
+	toggleTodo: (id: number) => Promise<void>;
+	remove: (id: number) => Promise<void>;
+}
+
+const TodoAppUI = ({ todos, isLoading, add, updateTitle, toggleTodo, remove }: TodoAppUIProps) => {
 	return (
 		<div className={"p-4 sm:p-6 md:p-8"}>
 			<div className="mx-auto max-w-3xl bg-card dark:bg-card-dark shadow-lg rounded-lg p-4 sm:p-6 transition-colors duration-300">

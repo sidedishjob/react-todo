@@ -1,10 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent, KeyboardEvent, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { todoAppearClass, todoCompleteClass, CompletedCheck } from './TodoAnimations';
 import { FiEdit2, FiSearch, FiTrash2 } from 'react-icons/fi';
+import { Todo } from '../../types/todo';
 
-const TodoItem = ({ todo, updateTitle, toggleTodo, remove }) => {
+interface TodoItemProps {
+	todo: Todo;
+	updateTitle: (id: number, newTitle: string) => Promise<void>;
+	toggleTodo: (id: number) => Promise<void>;
+	remove: (id: number) => Promise<void>;
+}
+
+const TodoItem = ({ todo, updateTitle, toggleTodo, remove }: TodoItemProps) => {
 	const navigate = useNavigate();
 	const [isCompleting, setIsCompleting] = useState(false);
 	// タスク名編集フラグの状態
@@ -13,9 +21,9 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }) => {
 	const [inputWidth, setInputWidth] = useState("auto");
 	// 編集用の状態
 	const [editTitle, setEditTitle] = useState(todo.title);
-	const inputRef = useRef(null);
-	const hiddenSpanRef = useRef(null);
-	const containerRef = useRef(null);
+	const inputRef = useRef<HTMLInputElement | null>(null);
+	const hiddenSpanRef = useRef<HTMLSpanElement | null>(null);
+	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		if (isEditing && inputRef.current) {
@@ -64,12 +72,12 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }) => {
 		}
 	};
 
-	const handleDeleteClick = (e) => {
+	const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
 		remove(todo.id);
 	};
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const newTitle = e.target.value;
 		// 入力中は state に保持のみ（DB書き込みしない）
 		setEditTitle(newTitle);
@@ -94,7 +102,7 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }) => {
 		finishEditing();
 	}
 
-	const handleInputKeyDown = (e) => {
+	const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
 			finishEditing();
 		}

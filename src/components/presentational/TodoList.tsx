@@ -1,8 +1,16 @@
 import React from 'react';
 import TodoItem from './TodoItem';
-import { FiClipboard } from "react-icons/fi";
+import { FiClipboard } from 'react-icons/fi';
+import { Todo } from '../../types/todo';
 
-const TodoList = ({ todos, updateTitle, toggleTodo, remove }) => {
+interface TodoListProps {
+	todos: Todo[];
+	updateTitle: (id: number, newTitle: string) => Promise<void>;
+	toggleTodo: (id: number) => Promise<void>;
+	remove: (id: number) => Promise<void>;
+}
+
+const TodoList = ({ todos, updateTitle, toggleTodo, remove }: TodoListProps) => {
 	
 	if (todos.length === 0) {
 		return (
