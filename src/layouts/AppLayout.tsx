@@ -1,24 +1,28 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiHome, FiArrowLeft ,FiSettings, FiSun, FiMoon } from 'react-icons/fi';
 import { cn } from '../lib/utils';
 import useDarkMode from '../hooks/useDarkMode';
 
-const getPageTitle = (pathname) => {
+interface AppLayoutProps {
+	children: ReactNode;
+}
+
+const getPageTitle = (pathname: string) => {
 	if (pathname === '/') return 'Todo App for React';
 	if (pathname.startsWith('/todo/')) return 'Todo の詳細';
 	if (pathname === '/settings') return '設定';
 	return 'ページ';
 };
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children }: AppLayoutProps) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { isDarkMode, toggleDarkMode } = useDarkMode();
 
 	const pageTitle = getPageTitle(location.pathname);
 	const isHome = location.pathname === '/';
-	const isActive = (path) => location.pathname === path;
+	const isActive = (path: string) => location.pathname === path;
 
 	return (
 		<div className="in-h-screen">
