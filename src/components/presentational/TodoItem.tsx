@@ -4,6 +4,7 @@ import { cn } from '../../lib/utils';
 import { todoAppearClass, todoCompleteClass, CompletedCheck } from './TodoAnimations';
 import { FiEdit2, FiSearch, FiTrash2 } from 'react-icons/fi';
 import { Todo } from '../../types/todo';
+import { todoTitleSchema } from '../../lib/validation/todoSchema';
 
 interface TodoItemProps {
 	todo: Todo;
@@ -21,6 +22,7 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }: TodoItemProps) => {
 	const [inputWidth, setInputWidth] = useState("auto");
 	// 編集用の状態
 	const [editTitle, setEditTitle] = useState(todo.title);
+	const [error, setError] = useState<string | null>(null);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const hiddenSpanRef = useRef<HTMLSpanElement | null>(null);
 	const containerRef = useRef<HTMLDivElement | null>(null);
@@ -30,6 +32,12 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }: TodoItemProps) => {
 			inputRef.current.focus();
 		}
 	}, [isEditing]);
+
+	useEffect(() => {
+		if (error) {
+			setError(null)
+		}
+	}, [editTitle]);
 
 	// 編集モードに入る前に幅を計算してから状態を更新
 	const startEditing = () => {
@@ -41,7 +49,6 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }: TodoItemProps) => {
 			
 			// 先に幅を設定してから編集モードに切り替え
 			setInputWidth(`${optimalWidth}px`);
-			setIsEditing(true);
 		}
 
 		setEditTitle(todo.title);
@@ -109,9 +116,20 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }: TodoItemProps) => {
 	}
 
 	const finishEditing = () => {
+		const result = todoTitleSchema.safeParse(editTitle);
+		if (!result.success) {
+			// エラーメッセージをstateに格納
+			setError(result.error.issues[0].message);
+			return;
+		}
+
+		setError(null);
+
+		// 変更があれば更新
 		if (editTitle !== todo.title) {
 			updateTitle(todo.id, editTitle);
 		}
+
 		setIsEditing(false);
 	}
 
@@ -169,6 +187,9 @@ const TodoItem = ({ todo, updateTitle, toggleTodo, remove }: TodoItemProps) => {
 						{todo.title}
 						{!todo.completed && <FiEdit2 className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />}
 					</span>
+				)}
+				{isEditing && error && (
+					<p className="text-red-500 text-sm mt-1 ml-1">{error}</p>
 				)}
 
 				{/* テキスト幅を測定するための非表示のspan */}

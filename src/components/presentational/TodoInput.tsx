@@ -37,7 +37,7 @@ const TodoInput = ({ add }: TodoInputProps) => {
 				<button
 					type="submit"
 					className="btn btn-primary"
-					// disabled={!inputValue.trim()}
+					disabled={!inputValue.trim()}
 				>
 					追加
 				</button>
